@@ -9,6 +9,7 @@ var inDevelopment = environment.IsDevelopment();
 // Add services to the container.
 
 services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
@@ -16,29 +17,11 @@ services.AddSwaggerGen();
 services.AddInfrastructure(configuration);
 services.AddApplication(configuration);
 
-services.AddSentry();
-builder.WebHost.UseSentry(opt =>
-{
-    opt.Dsn = configuration["SentryAPI:Dsn"];
-    opt.TracesSampleRate = 1.0;
-});
+AddSentry();
 
-var settingsSection = configuration.GetSection(LoggingSettings.SectionName);
-services.Configure<LoggingSettings>(settingsSection);
+AddSerilog();
 
-builder.Host.UseSerilog((context, services, configuration) =>
-{
-    configuration
-    .ReadFrom.Configuration(context.Configuration, settingsSection.Key)
-    .ReadFrom.Services(services);
-});
-
-services.AddOutputCache(opt =>
-{
-    opt.AddPolicy(RatesController.CachePolicyName, policy => policy
-        .Expire(TimeSpan.FromHours(1))
-    );
-});
+AddCaching();
 
 var app = builder.Build();
 
@@ -59,8 +42,37 @@ app.MapControllers();
 
 app.UseSerilogRequestLogging();
 
-if (!inDevelopment)
+UseExceptionHandler();
+
+app.Run();
+
+void AddSerilog()
 {
+    var settingsSection = configuration.GetSection(LoggingSettings.SectionName);
+    services.Configure<LoggingSettings>(settingsSection);
+
+    builder.Host.UseSerilog((context, services, configuration) =>
+    {
+        configuration
+        .ReadFrom.Configuration(context.Configuration, settingsSection.Key)
+        .ReadFrom.Services(services);
+    });
+}
+
+void AddSentry()
+{
+    services.AddSentry();
+    builder.WebHost.UseSentry(opt =>
+    {
+        opt.Dsn = configuration["SentryAPI:Dsn"];
+        opt.TracesSampleRate = 1.0;
+    });
+}
+
+void UseExceptionHandler()
+{
+    if (inDevelopment) return;
+
     app.UseExceptionHandler(builder => builder.Run(async ctx =>
     {
         var exception = ctx.Features.Get<IExceptionHandlerPathFeature>()?.Error;
@@ -69,4 +81,12 @@ if (!inDevelopment)
     }));
 }
 
-app.Run();
+void AddCaching()
+{
+    services.AddOutputCache(opt =>
+    {
+        opt.AddPolicy(RatesController.CachePolicyName, policy => policy
+            .Expire(TimeSpan.FromHours(1))
+        );
+    });
+}
