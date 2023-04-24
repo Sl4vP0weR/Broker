@@ -2,15 +2,16 @@
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        var settingsSection = configuration.GetSection(RedisSettings.SectionName);
+        services.Configure<RedisSettings>(settingsSection);
+
         services.AddStackExchangeRedisExtensions<SystemTextJsonSerializer>(provider =>
         {
-            var configuration = provider.GetService<IConfiguration>();
-            var result = new List<RedisConfiguration>()
-            {
-                new() { ConnectionString = configuration.GetConnectionString("redis") }
-            };
+            var settings = provider.GetService<IOptions<RedisSettings>>();
+            var result = new List<RedisConfiguration>() { settings.Value };
+
             return result;
         });
 

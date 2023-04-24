@@ -20,12 +20,19 @@ public class FixerExchangeRatesAPI : IExchangeRatesAPI
             var response = await SendRequest(url);
             if (response.TryPickT1(out var ex, out var responseBody))
                 return ex;
-            var jsonNode = JsonNode.Parse(responseBody).AsObject();
-            var rates = jsonNode["rates"].Deserialize<ExchangeRatesTable>();
+
+            var rates = ParseRates(responseBody);
 
             return new ExchangeRates(@base, date, rates);
         }
         catch (Exception ex) { return ex; }
+    }
+
+    private static ExchangeRatesTable ParseRates(string responseBody)
+    {
+        var jsonNode = JsonNode.Parse(responseBody).AsObject();
+        var rates = jsonNode["rates"].Deserialize<ExchangeRatesTable>();
+        return rates;
     }
 
     private async Task<OneOf<string, WebException>> SendRequest(string url)
@@ -33,11 +40,10 @@ public class FixerExchangeRatesAPI : IExchangeRatesAPI
         string response;
         try
         {
-            using (var client = new HttpClient())
-            {
-                client.DefaultRequestHeaders.Add("apikey", apiKey);
-                response = await client.GetStringAsync(url);
-            }
+            using var client = new HttpClient();
+            client.DefaultRequestHeaders.Add("apikey", apiKey);
+
+            response = await client.GetStringAsync(url);
         }
         catch (WebException ex) { return ex; }
 

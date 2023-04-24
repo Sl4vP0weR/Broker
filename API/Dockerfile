@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["BrokerAPI.csproj", "."]
-RUN dotnet restore "./BrokerAPI.csproj"
+COPY ["Broker.API.csproj", "."]
+RUN dotnet restore "./Broker.API.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "BrokerAPI.csproj" -c Release -o /app/build
+RUN dotnet build "Broker.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "BrokerAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Broker.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "BrokerAPI.dll"]
+ENTRYPOINT ["dotnet", "Broker.API.dll"]

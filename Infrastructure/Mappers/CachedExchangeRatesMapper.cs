@@ -12,8 +12,13 @@ public class CachedExchangeRatesMapper : IRegister
                 Rates = new(rates.InnerRates.ToDictionary(x => x.Key, x => x.Value))
             })
             .Compile();
+
         config.NewConfig<CachedExchangeRates, ExchangeRates>()
-            .MapWith(rates => new ExchangeRates(rates.Base, rates.Date, rates.Rates))
+            .MapWith(rates => new ExchangeRates(
+                rates.Base, 
+                rates.Date, 
+                rates.Rates
+            ))
             .Compile();
     }
 }

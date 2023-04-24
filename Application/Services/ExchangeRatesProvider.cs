@@ -5,19 +5,24 @@ public class ExchangeRatesProvider : IExchangeRatesProvider
     private readonly IExchangeRatesCache cache;
     private readonly IExchangeRatesAPI api;
     private readonly ApplicationSettings settings;
-    public ExchangeRatesProvider(IExchangeRatesCache cache, IExchangeRatesAPI api, IOptions<ApplicationSettings> settings)
+
+    public ExchangeRatesProvider(
+        IExchangeRatesCache cache,
+        IExchangeRatesAPI api,
+        IOptions<ApplicationSettings> settings)
     {
         this.cache = cache;
         this.api = api;
         this.settings = settings.Value;
     }
+
     public async Task<OneOf<ExchangeRates, Exception>> GetOrCache(DateOnly date)
     {
         if (await cache.Exists(date))
         {
-            var data = await cache.Get(date);
+            var cachedData = await cache.Get(date);
 
-            if (data.TryPickT0(out var cachedRates, out _) && cachedRates.Date == date)
+            if(cachedData is { } cachedRates)
                 return cachedRates;
         }
 
@@ -31,9 +36,10 @@ public class ExchangeRatesProvider : IExchangeRatesProvider
 
     public async Task<IReadOnlyList<ExchangeRates>> GetOrCacheAll(DateOnly from, DateOnly to)
     {
-        var daysPast = to.DaysPast(from);
-        List<ExchangeRates> list = new();
-        for (int i = 0; i <= daysPast; i++)
+        var list = new List<ExchangeRates>();
+
+        var daysCount = from.DaysSince(to);
+        for (int i = 0; i <= daysCount; i++)
         {
             var date = from.AddDays(i);
 
@@ -42,6 +48,7 @@ public class ExchangeRatesProvider : IExchangeRatesProvider
 
             list.Add(rates);
         }
+
         return list;
     }
 }

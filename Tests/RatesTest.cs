@@ -11,11 +11,11 @@ public class RatesTest
     {
         Random random = new (42);
 
-        var dates = new List<ExchangeRates>();
+        var days = new List<ExchangeRates>();
         for (int i = 1; i <= 30; i++)
-            dates.Add(ExchangeRates.GetRandom(random, new(2023, 4, i)));
+            days.Add(ExchangeRates.GetRandom(random, new(2023, 4, i)));
 
-        var searcher = new StrategySearcher(100, dates);
+        var searcher = new StrategySearcher(100, days);
         var bestData = searcher.FindBest(DefaultTool);
 
         Assert.True(bestData.TryPickT0(out var best, out _));
@@ -42,10 +42,9 @@ public class RatesTest
 
         var days = values
             .Select((x, i) =>
-                new ExchangeRates(DefaultBase,
-                new(2014, 12, 15 + i),
-                new() { [DefaultTool] = values[i] }
-                )
+                new ExchangeRates(DefaultBase, new(2014, 12, 15 + i), new() { 
+                    [DefaultTool] = values[i] 
+                })
             ).ToList();
 
         var searcher = new StrategySearcher(100, days);
@@ -55,24 +54,19 @@ public class RatesTest
 
         Assert.Equal(127.24m, best.TotalRevenue, 2);
     }
+
     [Fact]
     public void FindBest_SecondExample()
     {
         var days = new List<ExchangeRates>()
         {
-            new(DefaultBase, 
-                new(2014, 12, 5), 
-                new() { 
+            new (DefaultBase, new(2014, 12, 5), new() { 
                     [DefaultTool] = 40 
                 }),
-            new(DefaultBase, 
-                new(2014, 12, 7), 
-                new() { 
+            new (DefaultBase, new(2014, 12, 7), new() { 
                     [DefaultTool] = 35 
                 }),
-            new(DefaultBase, 
-                new(2014, 12, 19),
-                new() { 
+            new (DefaultBase, new(2014, 12, 19), new() { 
                     [DefaultTool] = 30 
                 })
         };

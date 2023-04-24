@@ -5,20 +5,16 @@ public record struct StrategySearcher(decimal Current, IReadOnlyList<ExchangeRat
     public OneOf<Strategy, None> FindBest(string tool)
     {
         ExchangeRate max = default, min = default;
-        var days = Days.Select(x => x.GetBy(tool)).OrderBy(x => x.Date).ToList();
-        var ordered = days.OrderBy(x => x.Value).ToList();
+        var days = Days.OrderBy(x => x.Date).Select(x => x.GetBy(tool)).ToList();
         var totalRevenue = Current;
 
-        // O(n^2), may be done better?
-        for (int i = ordered.Count - 1; i > 0; i--)
+        // O((n^2)/2), may be done better?
+        for (int i = 0; i < days.Count; i++)
         {
-            var maxTemp = ordered[i];
-            for (int j = 0; j < ordered.Count; j++)
+            var maxTemp = days[i];
+            for (int j = i + 1; j < days.Count; j++)
             {
-                var minTemp = ordered[j];
-
-                if (maxTemp.Date >= minTemp.Date)
-                    continue;
+                var minTemp = days[j];
 
                 var revenue = CalculateTotalRevenue(minTemp, maxTemp);
                 if (revenue <= totalRevenue)
@@ -33,9 +29,10 @@ public record struct StrategySearcher(decimal Current, IReadOnlyList<ExchangeRat
 
         return new Strategy(tool, max, min, totalRevenue);
     }
+
     public decimal CalculateTotalRevenue(ExchangeRate min, ExchangeRate max, decimal? fees = null) =>
         ((max * Current) / min) - (fees ?? GetFees(min, max));
 
-    public decimal GetFees(ExchangeRate from, ExchangeRate to) =>
-        Math.Max(0, from.Date.DaysPast(to.Date) * Fees);
+    public decimal GetFees(ExchangeRate min, ExchangeRate max) =>
+        Math.Max(0, max.Date.DaysSince(min.Date) * Fees);
 }

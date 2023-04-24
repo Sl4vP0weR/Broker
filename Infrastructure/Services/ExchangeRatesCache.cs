@@ -2,9 +2,11 @@
 
 public class ExchangeRatesCache : IExchangeRatesCache
 {
+    private readonly IRedisClient client;
     private readonly IRedisDatabase database;
     public ExchangeRatesCache(IRedisClient client)
     {
+        this.client = client;
         this.database = client.Db0;
     }
 
@@ -15,38 +17,41 @@ public class ExchangeRatesCache : IExchangeRatesCache
         return database.ReplaceAsync(key, rates.Adapt<CachedExchangeRates>());
     }
 
-    public async Task<OneOf<ExchangeRates, None>> Get(DateOnly date)
+    public async Task<ExchangeRates?> Get(DateOnly date)
     {
         var key = date.ToString();
+
         var data = await database.GetAsync<CachedExchangeRates>(key);
-        if (data is null) return default;
+        if (data is null) return null;
 
         return data.Adapt<ExchangeRates>();
     }
 
-    public async Task<bool> Exists(DateOnly date)
-    {
-        var key = date.ToString();
-        if (await database.ExistsAsync(key))
-            return true;
-
-        var data = await Get(date);
-        return data.IsT0;
-    }
-        
-
     public async Task<IReadOnlyList<ExchangeRates>> GetAll(DateOnly from, DateOnly to)
     {
-        HashSet<string> keys = new();
-        var daysPast = to.DaysPast(from);
-        for (int i = 0; i <= daysPast; i++)
+        var keys = new HashSet<string>();
+
+        var daysCount = from.DaysSince(to);
+        for (int i = 0; i <= daysCount; i++)
         {
             var date = from.AddDays(i);
             keys.Add(date.ToString());
         }
 
-        var dict = await database.GetAllAsync<CachedExchangeRates>(keys);
-        var rates = dict.Select(x => x.Value.Adapt<ExchangeRates>()).ToList();
+        var cachedRates = await database.GetAllAsync<CachedExchangeRates>(keys);
+        var rates = cachedRates.Select(x => x.Value.Adapt<ExchangeRates>()).ToList();
+
         return rates;
+    }
+
+    public async Task<bool> Exists(DateOnly date)
+    {
+        var key = date.ToString();
+
+        if (await database.ExistsAsync(key))
+            return true;
+
+        var cachedData = await Get(date);
+        return cachedData is not null;
     }
 }

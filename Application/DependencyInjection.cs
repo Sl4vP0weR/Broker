@@ -4,7 +4,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<ApplicationSettings>(configuration.GetSection(nameof(ApplicationSettings)));
+        var settingsSection = configuration.GetSection(ApplicationSettings.SectionName);
+        services.Configure<ApplicationSettings>(settingsSection);
 
         var assembly = typeof(AssemblyMarker).Assembly;
 
@@ -15,8 +16,8 @@ public static class DependencyInjection
 
         var config = TypeAdapterConfig.GlobalSettings;
         config.Scan(assembly, typeof(Domain.AssemblyMarker).Assembly);
-
         services.AddSingleton(config);
+
         services.AddScoped<IMapper, ServiceMapper>();
 
         services.AddValidatorsFromAssembly(assembly);

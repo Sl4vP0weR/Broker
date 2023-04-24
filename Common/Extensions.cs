@@ -7,6 +7,7 @@ public static class Extensions
         var randomNumber = (decimal)(Math.Round(random.NextDouble(), precision));
         return randomNumber * (max - min) + min;
     }
-    public static int DaysPast(this DateOnly from, DateOnly to) =>
-        (from.DayNumber - to.DayNumber);
+
+    public static int DaysSince(this DateOnly from, DateOnly to) =>
+        (to.DayNumber - from.DayNumber);
 }

@@ -27,9 +27,8 @@ public class RatesController : ControllerBase
     }
 
     [HttpPost("best")]
-    public async Task<IActionResult> Best([FromQuery] FindBestStrategy_Request request)
+    public async Task<IActionResult> FindBestStrategy([FromQuery] FindBestStrategy_Request request)
     {
-        // validate request here
         var validation = new FindBestStrategy_RequestValidator(settings).Validate(request);
         if(!validation.IsValid)
             return BadRequest(validation.Errors);

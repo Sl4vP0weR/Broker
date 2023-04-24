@@ -1,6 +1,7 @@
 var builder = WebApplication.CreateBuilder(args);
 
 var services = builder.Services;
+var configuration = builder.Configuration;
 
 // Add services to the container.
 
@@ -9,8 +10,8 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
-services.AddInfrastructure();
-services.AddApplication(builder.Configuration);
+services.AddInfrastructure(configuration);
+services.AddApplication(configuration);
 
 services.AddOutputCache(opt =>
 {

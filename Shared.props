@@ -10,6 +10,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
 		
 		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
@@ -20,12 +22,14 @@
 		<PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
 
 		<PackageReference Include="OneOf" Version="3.0.243" />
+
 	</ItemGroup>
 
 	<ItemGroup>
 		<Using Include="Mapster"/>
 		<Using Include="OneOf"/>
 		<Using Include="OneOf.Types"/>
+		<Using Include="System.Diagnostics"/>
 		<Using Include="System.Text.Json.Serialization"/>
 	</ItemGroup>
 
