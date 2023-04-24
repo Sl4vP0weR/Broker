@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+	</PropertyGroup>
+
+	<Import Project="..\Shared.props" />
+
+	<ItemGroup>
+		<PackageReference Include="StackExchange.Redis" Version="2.6.104" />
+		<PackageReference Include="StackExchange.Redis.Extensions.System.Text.Json" Version="9.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Common\Common.csproj" />
+		<ProjectReference Include="..\Domain\Domain.csproj" />
+	</ItemGroup>
+
+</Project>

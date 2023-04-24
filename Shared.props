@@ -1,0 +1,32 @@
+<Project>
+	<PropertyGroup>
+		<Nullable>annotations</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+
+		<ProjectName>$(AssemblyName)</ProjectName>
+		<RootNamespace>Broker.$(AssemblyName)</RootNamespace>
+		<AssemblyName>Broker.$(AssemblyName)</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Extensions.Configuration" Version="7.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+		
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.5.2" />
+		
+		<PackageReference Include="MediatR" Version="12.0.1" />
+		<PackageReference Include="MediatR.Extensions.FluentValidation.AspNetCore" Version="4.0.0" />
+		
+		<PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
+
+		<PackageReference Include="OneOf" Version="3.0.243" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Mapster"/>
+		<Using Include="OneOf"/>
+		<Using Include="OneOf.Types"/>
+		<Using Include="System.Text.Json.Serialization"/>
+	</ItemGroup>
+
+</Project>
