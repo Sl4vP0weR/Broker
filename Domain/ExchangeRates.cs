@@ -15,8 +15,6 @@ public struct ExchangeRates
     [JsonInclude] 
     public readonly DateOnly Date;
 
-    public readonly ExchangeRate GetBy(string currency) => Rates.TryGetValue(currency.ToUpper(), out var rate) ? rate : default;
-
     public ExchangeRates(string baseCurrency, DateOnly date, ExchangeRatesTable rates)
     {
         @base = baseCurrency;
@@ -27,6 +25,8 @@ public struct ExchangeRates
                 x => new ExchangeRate(x.Key, x.Value, date)
             ).AsReadOnly();
     }
+
+    public readonly ExchangeRate GetBy(string currency) => Rates.TryGetValue(currency.ToUpper(), out var rate) ? rate : default;
 
     public static ExchangeRates GetRandom(Random random, DateOnly date) =>
         new("USD", date, new()

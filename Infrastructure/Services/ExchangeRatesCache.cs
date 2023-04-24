@@ -4,6 +4,7 @@ public class ExchangeRatesCache : IExchangeRatesCache
 {
     private readonly IRedisClient client;
     private readonly IRedisDatabase database;
+
     public ExchangeRatesCache(IRedisClient client)
     {
         this.client = client;

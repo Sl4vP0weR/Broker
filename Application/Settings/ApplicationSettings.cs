@@ -10,6 +10,7 @@ public class ApplicationSettings
 
     [JsonIgnore]
     public DateOnly MinDate => MaxDate.AddDays(-AvailablePeriodDays);
+
     [JsonIgnore]
     public DateOnly MaxDate => DateOnly.FromDateTime(DateTime.UtcNow);
 }

@@ -3,10 +3,12 @@
 public class FixerExchangeRatesAPI : IExchangeRatesAPI
 {
     private readonly string apiKey;
+
     public FixerExchangeRatesAPI(IConfiguration configuration)
     {
         apiKey = configuration["FixerAPI:Key"];
     }
+
     public async Task<OneOf<ExchangeRates, Exception>> Get(string @base, DateOnly date, IReadOnlyList<string> currencies)
     {
         if (currencies.Count == 0)
