@@ -1,13 +1,13 @@
 namespace Broker.Tests;
 
-public class RatesTest
+public static class StrategySearcher
 {
     public const string 
         DefaultBase = "USD",
         DefaultTool = "RUB";
 
     [Fact]
-    public void FindBest_Random()
+    public static void FindBest_PseudoRandom()
     {
         Random random = new (42);
 
@@ -15,7 +15,7 @@ public class RatesTest
         for (int i = 1; i <= 30; i++)
             days.Add(ExchangeRates.GetRandom(random, new(2023, 4, i)));
 
-        var searcher = new StrategySearcher(100, days);
+        var searcher = new Application.StrategySearcher(100, days);
         var bestData = searcher.FindBest(DefaultTool);
 
         Assert.True(bestData.TryPickT0(out var best, out _));
@@ -25,7 +25,7 @@ public class RatesTest
     }
 
     [Fact]
-    public void FindBest_FirstExample()
+    public static void FindBest_FirstExample()
     {
         var values = new List<decimal>()
         {
@@ -47,7 +47,7 @@ public class RatesTest
                 })
             ).ToList();
 
-        var searcher = new StrategySearcher(100, days);
+        var searcher = new Application.StrategySearcher(100, days);
 
         var bestData = searcher.FindBest(DefaultTool);
         Assert.True(bestData.TryPickT0(out var best, out _));
@@ -56,7 +56,7 @@ public class RatesTest
     }
 
     [Fact]
-    public void FindBest_SecondExample()
+    public static void FindBest_SecondExample()
     {
         var days = new List<ExchangeRates>()
         {
@@ -71,7 +71,7 @@ public class RatesTest
                 })
         };
 
-        var searcher = new StrategySearcher(50, days);
+        var searcher = new Application.StrategySearcher(50, days);
 
         var bestData = searcher.FindBest(DefaultTool);
         Assert.True(bestData.TryPickT0(out var best, out _));
