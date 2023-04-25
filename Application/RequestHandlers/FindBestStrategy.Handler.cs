@@ -5,7 +5,9 @@ public class FindBestStrategyHandler : IRequestHandler<FindBestStrategy_Request,
     private readonly IExchangeRatesProvider provider;
     private readonly ApplicationSettings settings;
 
-    public FindBestStrategyHandler(IExchangeRatesProvider provider, IOptions<ApplicationSettings> settings)
+    public FindBestStrategyHandler(
+        IExchangeRatesProvider provider, 
+        IOptions<ApplicationSettings> settings)
     {
         this.provider = provider;
         this.settings = settings.Value;

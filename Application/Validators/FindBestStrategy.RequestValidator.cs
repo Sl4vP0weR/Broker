@@ -7,7 +7,7 @@ public class FindBestStrategy_RequestValidator : AbstractValidator<FindBestStrat
         StartDateInvalid = "Not in the available period of {0} days.",
         EndDateInvalid = "Not in the available period.";
 
-    public FindBestStrategy_RequestValidator() { }
+    public FindBestStrategy_RequestValidator(IOptions<ApplicationSettings> settings) : this(settings.Value) { }
     public FindBestStrategy_RequestValidator(ApplicationSettings settings)
     {
         RuleFor(x => x.StartDate)

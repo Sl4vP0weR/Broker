@@ -14,15 +14,22 @@ public static class DependencyInjection
             opt.RegisterServicesFromAssembly(assembly);
         });
 
-        var config = TypeAdapterConfig.GlobalSettings;
-        config.Scan(assembly, typeof(Domain.AssemblyMarker).Assembly);
-        services.AddSingleton(config);
-
-        services.AddScoped<IMapper, ServiceMapper>();
+        AddMapster(services);
 
         services.AddValidatorsFromAssembly(assembly);
 
         services.AddApplicationServices();
+
+        return services;
+    }
+
+    private static IServiceCollection AddMapster(IServiceCollection services)
+    {
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(typeof(AssemblyMarker).Assembly);
+        services.AddSingleton(config);
+
+        services.AddScoped<IMapper, ServiceMapper>();
 
         return services;
     }

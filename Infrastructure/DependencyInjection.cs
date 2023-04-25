@@ -4,6 +4,23 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        AddRedis(services, configuration);
+
+        AddMapster();
+
+        services.AddInfrastructureServices();
+
+        return services;
+    }
+
+    private static void AddMapster()
+    {
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(typeof(AssemblyMarker).Assembly);
+    }
+
+    private static IServiceCollection AddRedis(IServiceCollection services, IConfiguration configuration)
+    {
         var settingsSection = configuration.GetSection(RedisSettings.SectionName);
         services.Configure<RedisSettings>(settingsSection);
 
@@ -14,11 +31,6 @@ public static class DependencyInjection
 
             return result;
         });
-
-        var config = TypeAdapterConfig.GlobalSettings;
-        config.Scan(typeof(AssemblyMarker).Assembly);
-
-        services.AddInfrastructureServices();
 
         return services;
     }
