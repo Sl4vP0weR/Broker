@@ -17,6 +17,11 @@ services.AddSwaggerGen();
 services.AddApplication(configuration);
 services.AddInfrastructure(configuration);
 
+services.AddResponseCompression(opt =>
+{
+    opt.EnableForHttps = true;
+});
+
 AddSentry();
 
 AddSerilog();
@@ -41,6 +46,8 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseSerilogRequestLogging();
+
+app.UseResponseCompression();
 
 UseExceptionHandler();
 
