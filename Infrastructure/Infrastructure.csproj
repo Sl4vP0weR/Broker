@@ -7,6 +7,7 @@
 	<Import Project="..\Shared.props" />
 
 	<ItemGroup>
+		<PackageReference Include="RestSharp" Version="110.2.0" />
 		<PackageReference Include="StackExchange.Redis" Version="2.6.104" />
 		<PackageReference Include="StackExchange.Redis.Extensions.System.Text.Json" Version="9.1.0" />
 	</ItemGroup>

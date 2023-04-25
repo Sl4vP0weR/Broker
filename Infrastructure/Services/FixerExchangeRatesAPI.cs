@@ -3,10 +3,15 @@
 public class FixerExchangeRatesAPI : IExchangeRatesAPI
 {
     private readonly string apiKey;
+    private readonly RestClientOptions restOptions;
+    public const string 
+        APIKeyHeader = "apikey",
+        DateFormat = "yyyy'-'MM'-'dd";
 
     public FixerExchangeRatesAPI(IConfiguration configuration)
     {
         apiKey = configuration["FixerAPI:Key"];
+        restOptions = new("https://api.apilayer.com/fixer/");
     }
 
     public async Task<OneOf<ExchangeRates, Exception>> Get(string @base, DateOnly date, IReadOnlyList<string> currencies)
@@ -15,11 +20,15 @@ public class FixerExchangeRatesAPI : IExchangeRatesAPI
             return new ArgumentOutOfRangeException(nameof(currencies));
 
         var symbols = string.Join(",", currencies);
-        var url = $"https://api.apilayer.com/fixer/{date:yyyy'-'MM'-'dd}?base={@base}&symbols={symbols}";
+        
+        var request = new RestRequest(date.ToString(DateFormat));
+        request
+            .AddQueryParameter(nameof(@base), @base)
+            .AddQueryParameter(nameof(symbols), symbols);
 
         try
         {
-            var response = await SendRequest(url);
+            var response = await SendRequest(request);
             if (response.TryPickT1(out var ex, out var responseBody))
                 return ex;
 
@@ -37,18 +46,19 @@ public class FixerExchangeRatesAPI : IExchangeRatesAPI
         return rates;
     }
 
-    private async Task<OneOf<string, WebException>> SendRequest(string url)
+    private async Task<OneOf<string, WebException>> SendRequest(RestRequest request)
     {
-        string response;
+        string result;
         try
         {
-            using var client = new HttpClient();
-            client.DefaultRequestHeaders.Add("apikey", apiKey);
+            using var client = new RestClient(restOptions);
+            client.AddDefaultHeader(APIKeyHeader, apiKey);
 
-            response = await client.GetStringAsync(url);
+            var response = await client.ExecuteAsync(request);
+            result = response.Content;
         }
         catch (WebException ex) { return ex; }
 
-        return response;
+        return result;
     }
 }
