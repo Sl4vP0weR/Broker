@@ -7,9 +7,6 @@ global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.OutputCaching;
 global using Microsoft.Extensions.Options;
 global using Microsoft.AspNetCore.Diagnostics;
-
-global using Broker.Common;
-global using Broker.Domain;
 global using Broker.Infrastructure;
 global using Broker.Application;
 global using Broker.Application.DataTransferObjects;

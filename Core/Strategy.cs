@@ -1,4 +1,4 @@
-﻿namespace Broker.Domain;
+﻿namespace Broker.Core;
 
 public record struct Strategy(
     string Currency,

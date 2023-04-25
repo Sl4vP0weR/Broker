@@ -1,4 +1,4 @@
-﻿namespace Broker.Domain;
+﻿namespace Broker.Core;
 
 [DebuggerDisplay("[{Date}] {Base}")]
 public struct ExchangeRates
@@ -6,13 +6,13 @@ public struct ExchangeRates
     private readonly string @base;
     public string Base => @base;
 
-    [JsonInclude, JsonPropertyName("rates")] 
+    [JsonInclude, JsonPropertyName("rates")]
     public IReadOnlyDictionary<string, decimal> InnerRates { get; }
 
     [JsonIgnore]
     public IReadOnlyDictionary<string, ExchangeRate> Rates { get; }
 
-    [JsonInclude] 
+    [JsonInclude]
     public readonly DateOnly Date;
 
     public ExchangeRates(string baseCurrency, DateOnly date, ExchangeRatesTable rates)

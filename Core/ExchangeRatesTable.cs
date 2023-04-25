@@ -1,6 +1,6 @@
-﻿namespace Broker.Domain;
+﻿namespace Broker.Core;
 
-public class ExchangeRatesTable : Dictionary<string, decimal> 
+public class ExchangeRatesTable : Dictionary<string, decimal>
 {
     public ExchangeRatesTable() { }
     public ExchangeRatesTable(IDictionary<string, decimal> innerDictionary) : base(innerDictionary) { }

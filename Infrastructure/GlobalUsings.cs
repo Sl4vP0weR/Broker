@@ -16,7 +16,7 @@ global using System.Text.Json;
 global using System.Text.Json.Nodes;
 
 global using Broker.Common;
-global using Broker.Domain;
+global using Broker.Core;
 global using Broker.Application.Interfaces;
 global using Broker.Infrastructure.Services;
 global using Broker.Infrastructure.Settings;
