@@ -1,4 +1,4 @@
-﻿namespace Broker.Infrastructure.Interfaces;
+﻿namespace Broker.Application.Interfaces;
 
 public interface IExchangeRatesCache
 {

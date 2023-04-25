@@ -14,8 +14,8 @@ services.AddControllers();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
-services.AddInfrastructure(configuration);
 services.AddApplication(configuration);
+services.AddInfrastructure(configuration);
 
 AddSentry();
 

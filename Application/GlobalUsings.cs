@@ -11,8 +11,6 @@ global using Microsoft.Extensions.DependencyInjection;
 
 global using Broker.Common;
 global using Broker.Domain;
-global using Broker.Infrastructure.Interfaces;
-global using Broker.Infrastructure;
 global using Broker.Application.Interfaces;
 global using Broker.Application.DataTransferObjects;
 global using Broker.Application.Services;
