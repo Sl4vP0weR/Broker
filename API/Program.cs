@@ -61,6 +61,8 @@ void AddSerilog()
 
 void AddSentry()
 {
+    if (!inDevelopment) return;
+
     services.AddSentry();
     builder.WebHost.UseSentry(opt =>
     {
