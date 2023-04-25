@@ -1,6 +1,6 @@
 namespace Broker.Tests;
 
-public static class StrategySearcher
+public static class StrategySearcher_Tests
 {
     public const string 
         DefaultBase = "USD",
@@ -15,7 +15,7 @@ public static class StrategySearcher
         for (int i = 1; i <= 30; i++)
             days.Add(ExchangeRates.GetRandom(random, new(2023, 4, i)));
 
-        var searcher = new Application.StrategySearcher(100, days);
+        var searcher = new StrategySearcher(100, days);
         var bestData = searcher.FindBest(DefaultTool);
 
         Assert.True(bestData.TryPickT0(out var best, out _));
@@ -47,7 +47,7 @@ public static class StrategySearcher
                 })
             ).ToList();
 
-        var searcher = new Application.StrategySearcher(100, days);
+        var searcher = new StrategySearcher(100, days);
 
         var bestData = searcher.FindBest(DefaultTool);
         Assert.True(bestData.TryPickT0(out var best, out _));
@@ -71,7 +71,7 @@ public static class StrategySearcher
                 })
         };
 
-        var searcher = new Application.StrategySearcher(50, days);
+        var searcher = new StrategySearcher(50, days);
 
         var bestData = searcher.FindBest(DefaultTool);
         Assert.True(bestData.TryPickT0(out var best, out _));
