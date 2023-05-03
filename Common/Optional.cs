@@ -11,10 +11,10 @@ public record struct Optional<T>(T? Value = default)
 
     public T Get() => Value;
 
-    public T Or(T value) =>
+    public Optional<T> Or(T value) =>
         Value ?? value;
 
-    public T Or(Func<T> valueProducer) =>
+    public Optional<T> Or(Func<T> valueProducer) =>
         Value ?? valueProducer();
 
     public bool TryGet(out T value)
