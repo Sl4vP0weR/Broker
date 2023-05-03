@@ -16,7 +16,8 @@ public static class DependencyInjection
 
         AddMapster(services);
 
-        services.AddValidatorsFromAssembly(assembly);
+        services.AddFluentValidationAutoValidation();
+        services.AddValidatorsFromAssemblies(new[] { assembly });
 
         services.AddApplicationServices();
 

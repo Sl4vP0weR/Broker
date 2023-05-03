@@ -3,6 +3,8 @@ global using Sentry;
 
 global using MediatR;
 
+global using FluentValidation;
+
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.OutputCaching;
 global using Microsoft.Extensions.Options;

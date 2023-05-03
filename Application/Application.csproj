@@ -5,10 +5,7 @@
 	</PropertyGroup>
 
 	<Import Project="..\Shared.props" />
-
-	<ItemGroup>
-	</ItemGroup>
-
+	
 	<ItemGroup>
 		<ProjectReference Include="..\Common\Common.csproj" />
 		<ProjectReference Include="..\Core\Core.csproj" />

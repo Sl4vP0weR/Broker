@@ -80,13 +80,21 @@ void AddSentry()
 
 void UseExceptionHandler()
 {
-    if (inDevelopment) return;
-
     app.UseExceptionHandler(builder => builder.Run(async ctx =>
     {
         var exception = ctx.Features.Get<IExceptionHandlerPathFeature>()?.Error;
+
+        object response = exception switch
+        {
+            _ => inDevelopment ? exception : TypedResults.StatusCode(500)
+        };
+
+        await ctx.Response.WriteAsJsonAsync(response);
+        
+        if (inDevelopment) return;
+        if (exception is ValidationException) return;
+
         SentrySdk.CaptureException(exception);
-        await ctx.Response.WriteAsJsonAsync(TypedResults.StatusCode(500));
     }));
 }
 
