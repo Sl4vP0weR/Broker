@@ -1,3 +1,3 @@
 ﻿namespace Broker.Application;
 
-public static class AssemblyMarker { }
+public class AssemblyMarker { }
