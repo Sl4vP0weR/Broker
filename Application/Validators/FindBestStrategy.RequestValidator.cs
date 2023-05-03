@@ -19,15 +19,16 @@ public class FindBestStrategy_RequestValidator : AbstractValidator<FindBestStrat
             .WithMessage(BadDateFormatMessage);
 
         RuleFor(x => x.StartDate)
-            .Must(x => DateOnly.Parse(x) >= settings.MinDate)
+            .Must(x => DateParse(x, out var date) && date >= settings.MinDate)
             .WithMessage(string.Format(StartDateInvalid, settings.AvailablePeriodDays));
 
         RuleFor(x => x.EndDate)
-            .Must(x => DateOnly.Parse(x) <= settings.MaxDate)
+            .Must(x => DateParse(x, out var date) && date <= settings.MaxDate)
             .WithMessage(EndDateInvalid);
 
         RuleFor(x => x.MoneyUSD).GreaterThan(0m);
     }
 
-    private bool DateParsable(string value) => DateOnly.TryParse(value, out _);
+    private bool DateParse(string value, out DateOnly date) => DateOnly.TryParse(value, out date);
+    private bool DateParsable(string value) => DateParse(value, out _);
 }
