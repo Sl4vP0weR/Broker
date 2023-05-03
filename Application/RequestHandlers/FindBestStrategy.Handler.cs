@@ -37,7 +37,7 @@ public class FindBestStrategyHandler : IRequestHandler<FindBestStrategy_Request,
         foreach (var tool in settings.SupportedCurrencies)
         {
             var response = searcher.FindBest(tool);
-            if (!response.TryPickT0(out var strategy, out _)) continue;
+            if (!response.TryGet(out var strategy)) continue;
 
             strategies.Add(strategy);
         }

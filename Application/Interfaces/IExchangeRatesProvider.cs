@@ -2,6 +2,6 @@
 
 public interface IExchangeRatesProvider
 {
-    Task<OneOf<ExchangeRates, Exception>> GetOrCache(DateOnly date);
+    Task<Or<ExchangeRates, Exception>> GetOrCache(DateOnly date);
     Task<IReadOnlyList<ExchangeRates>> GetOrCacheAll(DateOnly from, DateOnly to);
 }

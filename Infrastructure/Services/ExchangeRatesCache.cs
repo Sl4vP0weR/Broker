@@ -18,12 +18,12 @@ public class ExchangeRatesCache : IExchangeRatesCache
         return database.ReplaceAsync(key, rates.Adapt<CachedExchangeRates>());
     }
 
-    public async Task<ExchangeRates?> Get(DateOnly date)
+    public async Task<Optional<ExchangeRates>> Get(DateOnly date)
     {
         var key = date.ToString();
 
         var data = await database.GetAsync<CachedExchangeRates>(key);
-        if (data is null) return null;
+        if (data is null) return default;
 
         return data.Adapt<ExchangeRates>();
     }

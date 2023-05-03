@@ -2,6 +2,7 @@
 	<PropertyGroup>
 		<Nullable>annotations</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>preview</LangVersion>
 
 		<ProjectName>$(AssemblyName)</ProjectName>
 		<RootNamespace>Broker.$(AssemblyName)</RootNamespace>
@@ -18,17 +19,12 @@
 		
 		<PackageReference Include="MediatR" Version="12.0.1" />
 		<PackageReference Include="MediatR.Extensions.FluentValidation.AspNetCore" Version="4.0.0" />
-		
+
 		<PackageReference Include="Mapster.DependencyInjection" Version="1.0.0" />
-
-		<PackageReference Include="OneOf" Version="3.0.243" />
-
 	</ItemGroup>
 
 	<ItemGroup>
 		<Using Include="Mapster"/>
-		<Using Include="OneOf"/>
-		<Using Include="OneOf.Types"/>
 		<Using Include="System.Diagnostics"/>
 		<Using Include="System.Text.Json.Serialization"/>
 	</ItemGroup>

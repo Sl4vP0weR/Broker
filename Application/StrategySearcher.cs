@@ -2,7 +2,7 @@
 
 public record struct StrategySearcher(decimal Current, IReadOnlyList<ExchangeRates> Days, decimal Fees = 1)
 {
-    public OneOf<Strategy, None> FindBest(string tool)
+    public Optional<Strategy> FindBest(string tool)
     {
         ExchangeRate max = default, min = default;
         var days = Days.OrderBy(x => x.Date).Select(x => x.GetBy(tool)).ToList();
@@ -25,7 +25,7 @@ public record struct StrategySearcher(decimal Current, IReadOnlyList<ExchangeRat
                 totalRevenue = revenue;
             }
         }
-        if (!max.IsValid || !min.IsValid) return new None();
+        if (!max.IsValid || !min.IsValid) return default;
 
         return new Strategy(tool, max, min, totalRevenue);
     }

@@ -16,19 +16,19 @@ public class ExchangeRatesProvider : IExchangeRatesProvider
         this.settings = settings.Value;
     }
 
-    public async Task<OneOf<ExchangeRates, Exception>> GetOrCache(DateOnly date)
+    public async Task<Or<ExchangeRates, Exception>> GetOrCache(DateOnly date)
     {
         if (await cache.Exists(date))
         {
             var cachedData = await cache.Get(date);
 
-            if(cachedData is { } cachedRates)
+            if(cachedData.TryGet(out var cachedRates))
                 return cachedRates;
         }
 
         var response = await api.Get(settings.DefaultBase, date, settings.SupportedCurrencies);
 
-        if(response.TryPickT0(out var rates, out _))
+        if(response.TryPickFirst(out var rates))
             await cache.Set(rates);
 
         return response;
@@ -44,7 +44,7 @@ public class ExchangeRatesProvider : IExchangeRatesProvider
             var date = from.AddDays(i);
 
             var response = await GetOrCache(date);
-            if (!response.TryPickT0(out var rates, out _)) continue;
+            if (!response.TryPickFirst(out var rates)) continue;
 
             list.Add(rates);
         }

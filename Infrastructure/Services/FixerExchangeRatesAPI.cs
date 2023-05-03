@@ -14,7 +14,7 @@ public class FixerExchangeRatesAPI : IExchangeRatesAPI
         restOptions = new("https://api.apilayer.com/fixer/");
     }
 
-    public async Task<OneOf<ExchangeRates, Exception>> Get(string @base, DateOnly date, IReadOnlyList<string> currencies)
+    public async Task<Or<ExchangeRates, Exception>> Get(string @base, DateOnly date, IReadOnlyList<string> currencies)
     {
         if (currencies.Count == 0)
             return new ArgumentOutOfRangeException(nameof(currencies));
@@ -29,10 +29,10 @@ public class FixerExchangeRatesAPI : IExchangeRatesAPI
         try
         {
             var response = await SendRequest(request);
-            if (response.TryPickT1(out var ex, out var responseBody))
+            if (response.TryPickSecond(out var ex))
                 return ex;
 
-            var rates = ParseRates(responseBody);
+            var rates = ParseRates(response.First);
 
             return new ExchangeRates(@base, date, rates);
         }
@@ -46,12 +46,12 @@ public class FixerExchangeRatesAPI : IExchangeRatesAPI
         return rates;
     }
 
-    private async Task<OneOf<string, WebException>> SendRequest(RestRequest request)
+    private async Task<Or<string, WebException>> SendRequest(RestRequest request)
     {
         string result;
         try
         {
-            using var client = new RestClient(restOptions);
+            using RestClient client = new (restOptions);
             client.AddDefaultHeader(APIKeyHeader, apiKey);
 
             var response = await client.ExecuteAsync(request);

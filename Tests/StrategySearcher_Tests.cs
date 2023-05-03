@@ -18,7 +18,7 @@ public static class StrategySearcher_Tests
         var searcher = new StrategySearcher(100, days);
         var bestData = searcher.FindBest(DefaultTool);
 
-        Assert.True(bestData.TryPickT0(out var best, out _));
+        Assert.True(bestData.TryGet(out var best));
 
         Assert.True(best.BuyAt.Date < best.SellAt.Date);
         Assert.Equal(140.06m, best.TotalRevenue, 2);
@@ -50,7 +50,7 @@ public static class StrategySearcher_Tests
         var searcher = new StrategySearcher(100, days);
 
         var bestData = searcher.FindBest(DefaultTool);
-        Assert.True(bestData.TryPickT0(out var best, out _));
+        Assert.True(bestData.TryGet(out var best));
 
         Assert.Equal(127.24m, best.TotalRevenue, 2);
     }
@@ -74,7 +74,7 @@ public static class StrategySearcher_Tests
         var searcher = new StrategySearcher(50, days);
 
         var bestData = searcher.FindBest(DefaultTool);
-        Assert.True(bestData.TryPickT0(out var best, out _));
+        Assert.True(bestData.TryGet(out var best));
 
         Assert.Equal(55.1m, best.TotalRevenue, 1);
     }
