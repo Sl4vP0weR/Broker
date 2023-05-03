@@ -45,14 +45,9 @@ public class ExchangeRatesCache : IExchangeRatesCache
         return rates;
     }
 
-    public async Task<bool> Exists(DateOnly date)
+    public Task<bool> Exists(DateOnly date)
     {
         var key = date.ToString();
-
-        if (await database.ExistsAsync(key))
-            return true;
-
-        var cachedData = await Get(date);
-        return cachedData is not null;
+        return database.ExistsAsync(key);
     }
 }
