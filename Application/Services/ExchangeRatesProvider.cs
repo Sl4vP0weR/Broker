@@ -16,20 +16,23 @@ public class ExchangeRatesProvider : IExchangeRatesProvider
         this.settings = settings.Value;
     }
 
-    public async Task<Or<ExchangeRates, Exception>> GetOrCache(DateOnly date)
+    /// <summary>
+    /// If cache entry exists - returns cached value, 
+    /// otherwise retrieves rates from API and adds entry to the cache.
+    /// </summary>
+    /// <exception cref="System.Net.WebException"/>
+    public async Task<ExchangeRates> GetOrCache(DateOnly date)
     {
         if (await cache.Exists(date))
         {
             var cachedData = await cache.Get(date);
 
-            if(cachedData.TryGet(out var cachedRates))
+            if (cachedData.TryGet(out var cachedRates))
                 return cachedRates;
         }
 
         var response = await api.Get(settings.DefaultBase, date, settings.SupportedCurrencies);
-
-        if(response.TryPickFirst(out var rates))
-            await cache.Set(rates);
+        await cache.Set(response);
 
         return response;
     }
@@ -43,10 +46,13 @@ public class ExchangeRatesProvider : IExchangeRatesProvider
         {
             var date = from.AddDays(i);
 
-            var response = await GetOrCache(date);
-            if (!response.TryPickFirst(out var rates)) continue;
+            try
+            {
+                var response = await GetOrCache(date);
 
-            list.Add(rates);
+                list.Add(response);
+            }
+            catch { }
         }
 
         return list;

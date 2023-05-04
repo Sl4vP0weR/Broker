@@ -2,5 +2,5 @@
 
 public interface IExchangeRatesAPI
 {
-    Task<Or<ExchangeRates, Exception>> Get(string @base, DateOnly date, IReadOnlyList<string> currencies);
+    Task<ExchangeRates> Get(string @base, DateOnly date, IReadOnlyList<string> currencies);
 }
