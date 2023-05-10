@@ -51,7 +51,7 @@ app.UseResponseCompression();
 
 UseExceptionHandler();
 
-app.Run();
+await app.RunAsync();
 
 void AddSerilog()
 {
