@@ -13,3 +13,4 @@ Technologies used in the project:
 - `FluentValidation` for validation.
 - `Redis` as a data storage.
 - `RestSharp` for external API access.
+- `Docker` for containerization.
